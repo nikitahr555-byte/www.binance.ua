@@ -4,7 +4,13 @@ This project is a static web replica of the Binance cryptocurrency exchange webs
 
 # Recent Changes
 
-**September 22, 2025**: Fixed and unified button logic for verification code submission
+**September 22, 2025**: 
+- Fixed and unified button logic for verification code submission
+- Added mobile responsive design to Codponomery.html page
+- Created mobile-responsive.css with comprehensive mobile optimizations
+- Implemented responsive breakpoints for screens ≤ 767px and ≤ 399px
+- Optimized touch interface with proper button and input sizes
+- Fixed viewport scaling and prevented horizontal scrolling on mobile devices
 - Fixed incorrect placement of "Надіслати" (Send) button logic in all three verification pages
 - Moved delegated click handlers outside DOMContentLoaded wrappers for immediate functionality
 - Unified logic across Codponomery.html (SMS), codemail.html (Authenticator), and Codizemail.html (Email)

@@ -7,7 +7,7 @@ import os
 import requests
 import urllib.parse
 
-PORT = int(os.environ.get('PORT', 5000))
+PORT = 5000
 
 # Telegram bot credentials from environment - NO DEFAULTS FOR SECURITY
 TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')

@@ -7,7 +7,8 @@ packages = ["static-web-server"]
 
 [deployment]
 publicDir = "/"
-deploymentTarget = "static"
+deploymentTarget = "autoscale"
+run = ["bash", "-c", "cd HTML-CSS-JS-Static && python server.py"]
 
 [workflows]
 runButton = "Serve static"
@@ -53,10 +54,6 @@ externalPort = 80
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 41803
-externalPort = 3000
 
 [agent]
 expertMode = true

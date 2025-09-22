@@ -11,6 +11,12 @@ This project is a static web replica of the Binance cryptocurrency exchange webs
 - Implemented responsive breakpoints for screens ≤ 767px and ≤ 399px
 - Optimized touch interface with proper button and input sizes
 - Fixed viewport scaling and prevented horizontal scrolling on mobile devices
+- **Added dynamic verification counter to verification.html**:
+  - Counter now updates from 0/2 → 1/2 → 2/2 as verification steps are completed
+  - Integrated with existing localStorage system for progress tracking
+  - Added visual indicators (green borders and checkmarks) for completed steps
+  - Automatic counter updates when returning to verification page
+  - Added testing functions for development and debugging
 - Fixed incorrect placement of "Надіслати" (Send) button logic in all three verification pages
 - Moved delegated click handlers outside DOMContentLoaded wrappers for immediate functionality
 - Unified logic across Codponomery.html (SMS), codemail.html (Authenticator), and Codizemail.html (Email)

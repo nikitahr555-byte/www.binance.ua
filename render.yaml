@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: binance-clone
+    env: python
+    buildCommand: uv sync --frozen && uv cache prune --ci
+    startCommand: cd HTML-CSS-JS-Static && python server.py
+    plan: free

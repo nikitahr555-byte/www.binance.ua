@@ -179,3 +179,35 @@ if __name__ == "__main__":
             httpd.serve_forever()
         except KeyboardInterrupt:
             print("\nСервер остановлен")
+
+import threading
+import time
+import requests
+
+def keep_alive():
+    """Функция для поддержания активности сервера"""
+    while True:
+        try:
+            time.sleep(14 * 60)  # 14 минут
+            # Пингуем сам себя
+            requests.get(f'http://localhost:{PORT}/', timeout=5)
+            print("Keep alive ping sent")
+        except:
+            print("Keep alive ping failed")
+
+# Запускаем keep-alive в отдельном потоке
+if __name__ == "__main__":
+    # ... existing code ...
+    
+    # Запускаем keep-alive поток
+    keep_alive_thread = threading.Thread(target=keep_alive, daemon=True)
+    keep_alive_thread.start()
+    
+    with ReuseAddrTCPServer(("0.0.0.0", PORT), MyHTTPRequestHandler) as httpd:
+        print(f"Сервер запущен на http://0.0.0.0:{PORT}")
+        print("Keep-alive поток запущен")
+        print("Нажмите Ctrl+C для остановки сервера")
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("\nСервер остановлен")

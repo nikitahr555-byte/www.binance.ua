@@ -8,7 +8,7 @@ packages = ["static-web-server"]
 [deployment]
 publicDir = "/"
 deploymentTarget = "autoscale"
-run = ["bash", "-c", "cd HTML-CSS-JS-Static && python server.py"]
+run = ["python", "HTML-CSS-JS-Static/server.py"]
 
 [workflows]
 runButton = "Project"

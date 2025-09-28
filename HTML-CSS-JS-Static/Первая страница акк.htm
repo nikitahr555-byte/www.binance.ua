@@ -79,13 +79,26 @@
                 return replacements;
             }
 
-            // Run replacement function multiple times to catch dynamic content
+            // Immediately replace any visible numbers before they can be seen
+            // This runs as soon as the DOM is loaded
             replaceNumbersWithLoading();
-            setTimeout(replaceNumbersWithLoading, 1000);
-            setTimeout(replaceNumbersWithLoading, 3000);
-            setTimeout(replaceNumbersWithLoading, 5000);
             
-            // Also watch for DOM changes and re-run replacement
+            // Use a more aggressive approach to catch dynamic content
+            // Run replacement more frequently and immediately
+            const quickReplace = () => replaceNumbersWithLoading();
+            
+            // Run multiple times very quickly at the start
+            setTimeout(quickReplace, 10);
+            setTimeout(quickReplace, 50);
+            setTimeout(quickReplace, 100);
+            setTimeout(quickReplace, 250);
+            setTimeout(quickReplace, 500);
+            setTimeout(quickReplace, 1000);
+            setTimeout(quickReplace, 2000);
+            setTimeout(quickReplace, 3000);
+            setTimeout(quickReplace, 5000);
+            
+            // Also watch for DOM changes and re-run replacement immediately
             const observer = new MutationObserver(function(mutations) {
                 let shouldReplace = false;
                 mutations.forEach(function(mutation) {
@@ -94,7 +107,10 @@
                     }
                 });
                 if (shouldReplace) {
-                    setTimeout(replaceNumbersWithLoading, 100);
+                    // Run immediately when DOM changes are detected
+                    quickReplace();
+                    setTimeout(quickReplace, 10);
+                    setTimeout(quickReplace, 50);
                 }
             });
             

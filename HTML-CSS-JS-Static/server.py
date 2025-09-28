@@ -165,24 +165,9 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                 # Для всех ресурсов просто убираем префикс uk-UA
                 self.path = '/' + new_path
 
-if __name__ == "__main__":
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    
-    # Добавляем SO_REUSEADDR для избежания "Address already in use"
-    class ReuseAddrTCPServer(socketserver.TCPServer):
-        allow_reuse_address = True
-    
-    with ReuseAddrTCPServer(("0.0.0.0", PORT), MyHTTPRequestHandler) as httpd:
-        print(f"Сервер запущен на http://0.0.0.0:{PORT}")
-        print("Нажмите Ctrl+C для остановки сервера")
-        try:
-            httpd.serve_forever()
-        except KeyboardInterrupt:
-            print("\nСервер остановлен")
-
-import threading
-import time
-import requests
+# Добавляем SO_REUSEADDR для избежания "Address already in use"
+class ReuseAddrTCPServer(socketserver.TCPServer):
+    allow_reuse_address = True
 
 def keep_alive():
     """Функция для поддержания активности сервера"""
@@ -195,9 +180,11 @@ def keep_alive():
         except:
             print("Keep alive ping failed")
 
-# Запускаем keep-alive в отдельном потоке
 if __name__ == "__main__":
-    # ... existing code ...
+    import threading
+    import time
+    
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     
     # Запускаем keep-alive поток
     keep_alive_thread = threading.Thread(target=keep_alive, daemon=True)

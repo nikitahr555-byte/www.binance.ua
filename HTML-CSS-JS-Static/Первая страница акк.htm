@@ -21,11 +21,22 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Hide balance numbers immediately until JavaScript replaces them */
+        .balance-hidden {
+            visibility: hidden !important;
+        }
+        
+        /* Target specific balance text patterns */
+        body:not(.balances-processed) *:not(script):not(style) {
+            /* This will be handled by JavaScript immediately */
+        }
         
         /* JavaScript to replace specific numbers with loading */
         </style>
         <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        // Immediate execution - no waiting for DOM
+        (function() {
             function replaceNumbersWithLoading() {
                 let replacements = 0;
                 
@@ -109,47 +120,66 @@
                 return replacements;
             }
 
-            // Immediately replace any visible numbers before they can be seen
-            // This runs as soon as the DOM is loaded
-            replaceNumbersWithLoading();
+            // Start replacement immediately, before DOM is fully loaded
+            const quickReplace = () => {
+                try {
+                    if (document.body) {
+                        replaceNumbersWithLoading();
+                    }
+                } catch (e) {
+                    // Ignore errors during early execution
+                }
+            };
             
-            // Use a more aggressive approach to catch dynamic content
-            // Run replacement more frequently and immediately
-            const quickReplace = () => replaceNumbersWithLoading();
+            // Start replacing immediately and continuously
+            quickReplace();
             
-            // Run multiple times very quickly at the start
+            // Use intervals to catch content as soon as it appears
+            let intervalId = setInterval(quickReplace, 1); // Every millisecond!
+            
+            // Setup more standard intervals as backup
+            setTimeout(quickReplace, 5);
             setTimeout(quickReplace, 10);
+            setTimeout(quickReplace, 25);
             setTimeout(quickReplace, 50);
             setTimeout(quickReplace, 100);
             setTimeout(quickReplace, 250);
             setTimeout(quickReplace, 500);
             setTimeout(quickReplace, 1000);
-            setTimeout(quickReplace, 2000);
-            setTimeout(quickReplace, 3000);
-            setTimeout(quickReplace, 5000);
             
-            // Also watch for DOM changes and re-run replacement immediately
-            const observer = new MutationObserver(function(mutations) {
-                let shouldReplace = false;
-                mutations.forEach(function(mutation) {
-                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                        shouldReplace = true;
+            // Clear the aggressive interval after page load
+            document.addEventListener('DOMContentLoaded', function() {
+                clearInterval(intervalId);
+                // Continue with normal replacement
+                quickReplace();
+                
+                // Setup mutation observer for dynamic content
+                const observer = new MutationObserver(function(mutations) {
+                    let shouldReplace = false;
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                            shouldReplace = true;
+                        }
+                    });
+                    if (shouldReplace) {
+                        quickReplace();
+                        setTimeout(quickReplace, 1);
+                        setTimeout(quickReplace, 10);
                     }
                 });
-                if (shouldReplace) {
-                    // Run immediately when DOM changes are detected
-                    quickReplace();
-                    setTimeout(quickReplace, 10);
-                    setTimeout(quickReplace, 50);
+                
+                if (document.body) {
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
                 }
+                
+                // Mark body as processed
+                document.body.classList.add('balances-processed');
             });
             
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-            
-        });
+        })();
         </script>
         <style>
             #onetrust-consent-sdk #onetrust-policy-title,

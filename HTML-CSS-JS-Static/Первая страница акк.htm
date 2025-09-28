@@ -27,6 +27,8 @@
         <script>
         document.addEventListener('DOMContentLoaded', function() {
             function replaceNumbersWithLoading() {
+                let replacements = 0;
+                
                 // Find all text nodes in the document
                 const walker = document.createTreeWalker(
                     document.body,
@@ -40,52 +42,67 @@
                 while (node = walker.nextNode()) {
                     textNodes.push(node);
                 }
+                
 
                 textNodes.forEach(function(textNode) {
+                    if (!textNode.parentNode) return;
+                    
                     let content = textNode.textContent;
                     let changed = false;
 
-                    // Replace specific numbers while preserving currency symbols
+                    // Replace specific numbers with exact boundaries while preserving currency symbols
                     if (content.includes('0,00006582')) {
-                        // Create loading element
-                        const loadingSpan = document.createElement('span');
-                        loadingSpan.className = 'number-loading';
-                        
-                        // Replace the number but keep any currency symbols
-                        const newContent = content.replace(/0,00006582/g, '<span class="number-loading"></span>');
-                        
-                        // Create a wrapper element to contain the mixed content
-                        const wrapper = document.createElement('span');
-                        wrapper.innerHTML = newContent;
-                        
-                        textNode.parentNode.replaceChild(wrapper, textNode);
-                        changed = true;
+                        // Use word boundaries to match only the exact number
+                        const newContent = content.replace(/\b0,00006582\b/g, '<span class="number-loading"></span>');
+                        if (newContent !== content) {
+                            const wrapper = document.createElement('span');
+                            wrapper.innerHTML = newContent;
+                            textNode.parentNode.replaceChild(wrapper, textNode);
+                            replacements++;
+                            changed = true;
+                        }
                     }
 
                     if (content.includes('7,35')) {
-                        // Create loading element  
-                        const loadingSpan = document.createElement('span');
-                        loadingSpan.className = 'number-loading';
-                        
-                        // Replace the number but keep any currency symbols
-                        const newContent = content.replace(/7,35/g, '<span class="number-loading"></span>');
-                        
-                        // Create a wrapper element to contain the mixed content
-                        const wrapper = document.createElement('span');
-                        wrapper.innerHTML = newContent;
-                        
-                        textNode.parentNode.replaceChild(wrapper, textNode);
-                        changed = true;
+                        // Use word boundaries to match only the exact number
+                        const newContent = content.replace(/\b7,35\b/g, '<span class="number-loading"></span>');
+                        if (newContent !== content) {
+                            const wrapper = document.createElement('span');
+                            wrapper.innerHTML = newContent;
+                            textNode.parentNode.replaceChild(wrapper, textNode);
+                            replacements++;
+                            changed = true;
+                        }
                     }
                 });
+                
+                return replacements;
             }
 
-            // Run replacement immediately
+            // Run replacement function multiple times to catch dynamic content
             replaceNumbersWithLoading();
-            
-            // Also run after a short delay to catch dynamically loaded content
             setTimeout(replaceNumbersWithLoading, 1000);
             setTimeout(replaceNumbersWithLoading, 3000);
+            setTimeout(replaceNumbersWithLoading, 5000);
+            
+            // Also watch for DOM changes and re-run replacement
+            const observer = new MutationObserver(function(mutations) {
+                let shouldReplace = false;
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                        shouldReplace = true;
+                    }
+                });
+                if (shouldReplace) {
+                    setTimeout(replaceNumbersWithLoading, 100);
+                }
+            });
+            
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+            
         });
         </script>
         <style>

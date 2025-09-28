@@ -38,5 +38,9 @@ outputType = "webview"
 localPort = 5000
 externalPort = 8080
 
+[[ports]]
+localPort = 43257
+externalPort = 80
+
 [agent]
 expertMode = true

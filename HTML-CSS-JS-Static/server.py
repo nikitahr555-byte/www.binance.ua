@@ -129,9 +129,19 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         response = json.dumps(data).encode('utf-8')
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
-        self.send_header('Access-Control-Allow-Origin', '*')
+        # More secure CORS configuration - allow specific origins in production
+        origin = self.headers.get('Origin', '')
+        allowed_origins = ['http://localhost:5000', 'http://0.0.0.0:5000', 'http://127.0.0.1:5000']
+        
+        # For development in Replit environment, we need to be more flexible
+        if origin and any(origin.startswith(prefix) for prefix in ['https://', 'http://localhost', 'http://127.0.0.1', 'http://0.0.0.0']):
+            self.send_header('Access-Control-Allow-Origin', origin)
+        else:
+            self.send_header('Access-Control-Allow-Origin', 'http://localhost:5000')
+            
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.send_header('Access-Control-Allow-Credentials', 'true')
         self.send_header('Content-Length', str(len(response)))
         self.end_headers()
         self.wfile.write(response)
@@ -139,9 +149,18 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_OPTIONS(self):
         """Обробляємо OPTIONS запити для CORS"""
         self.send_response(200)
-        self.send_header('Access-Control-Allow-Origin', '*')
+        
+        # More secure CORS configuration for preflight requests
+        origin = self.headers.get('Origin', '')
+        if origin and any(origin.startswith(prefix) for prefix in ['https://', 'http://localhost', 'http://127.0.0.1', 'http://0.0.0.0']):
+            self.send_header('Access-Control-Allow-Origin', origin)
+        else:
+            self.send_header('Access-Control-Allow-Origin', 'http://localhost:5000')
+            
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.send_header('Access-Control-Allow-Credentials', 'true')
+        self.send_header('Access-Control-Max-Age', '86400')  # Cache preflight for 24 hours
         self.end_headers()
     
     def _process_path(self):

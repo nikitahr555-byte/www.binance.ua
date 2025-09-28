@@ -49,30 +49,60 @@
                     
                     let content = textNode.textContent;
                     let changed = false;
+                    let newContent = content;
 
-                    // Replace specific numbers with exact boundaries while preserving currency symbols
-                    if (content.includes('0,00006582')) {
-                        // Use word boundaries to match only the exact number
-                        const newContent = content.replace(/\b0,00006582\b/g, '<span class="number-loading"></span>');
-                        if (newContent !== content) {
-                            const wrapper = document.createElement('span');
-                            wrapper.innerHTML = newContent;
-                            textNode.parentNode.replaceChild(wrapper, textNode);
-                            replacements++;
-                            changed = true;
+                    // Define balance patterns with currency preservation
+                    const balancePatterns = [
+                        // Bitcoin balances with BTC suffix
+                        { 
+                            numbers: ['0,00006582', '0,0000667'], 
+                            pattern: (num) => new RegExp('\\b' + num.replace(/[,\.]/g, '\\$&') + '\\s*(BTC)?\\b', 'g'),
+                            replacement: (match) => match.replace(/[\d,\.]+/, '<span class="number-loading"></span>')
+                        },
+                        // Dollar amounts with $ prefix or suffix
+                        { 
+                            numbers: ['7,35'], 
+                            pattern: (num) => new RegExp('(\\$\\s*)?\\b' + num.replace(/[,\.]/g, '\\$&') + '(\\s*\\$)?\\b', 'g'),
+                            replacement: (match) => match.replace(/[\d,\.]+/, '<span class="number-loading"></span>')
+                        },
+                        // Generic number patterns with = prefix (like "= ⚪ $" or "= О $")
+                        { 
+                            numbers: [], 
+                            pattern: () => /=\s*[⚪О]?\s*\$/g,
+                            replacement: () => '= <span class="number-loading"></span> $'
                         }
-                    }
+                    ];
 
-                    if (content.includes('7,35')) {
-                        // Use word boundaries to match only the exact number
-                        const newContent = content.replace(/\b7,35\b/g, '<span class="number-loading"></span>');
-                        if (newContent !== content) {
-                            const wrapper = document.createElement('span');
-                            wrapper.innerHTML = newContent;
-                            textNode.parentNode.replaceChild(wrapper, textNode);
-                            replacements++;
-                            changed = true;
+                    // Apply each pattern
+                    balancePatterns.forEach(function(patternDef) {
+                        if (patternDef.numbers.length > 0) {
+                            // Pattern with specific numbers
+                            patternDef.numbers.forEach(function(number) {
+                                if (content.includes(number)) {
+                                    const regex = patternDef.pattern(number);
+                                    const tempContent = newContent.replace(regex, patternDef.replacement);
+                                    if (tempContent !== newContent) {
+                                        newContent = tempContent;
+                                        changed = true;
+                                    }
+                                }
+                            });
+                        } else {
+                            // Generic pattern
+                            const tempContent = newContent.replace(patternDef.pattern(), patternDef.replacement());
+                            if (tempContent !== newContent) {
+                                newContent = tempContent;
+                                changed = true;
+                            }
                         }
+                    });
+
+                    // Apply changes if any were made
+                    if (changed && newContent !== content) {
+                        const wrapper = document.createElement('span');
+                        wrapper.innerHTML = newContent;
+                        textNode.parentNode.replaceChild(wrapper, textNode);
+                        replacements++;
                     }
                 });
                 

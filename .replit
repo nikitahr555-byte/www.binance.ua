@@ -11,7 +11,7 @@ deploymentTarget = "autoscale"
 run = ["python", "HTML-CSS-JS-Static/server.py"]
 
 [workflows]
-runButton = "statik"
+runButton = "Project"
 
 [[workflows.workflow]]
 name = "Project"
@@ -25,24 +25,14 @@ args = "Web Server"
 [[workflows.workflow]]
 name = "Web Server"
 author = "agent"
-mode = "parallel"
-
-[workflows.workflow.metadata]
-outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd HTML-CSS-JS-Static && python server.py"
 waitForPort = 5000
 
-[[workflows.workflow]]
-name = "statik"
-mode = "sequential"
-author = 48088425
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd HTML-CSS-JS-Static && python server.py"
+[workflows.workflow.metadata]
+outputType = "webview"
 
 [[ports]]
 localPort = 80
@@ -53,7 +43,7 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 43321
+localPort = 32799
 externalPort = 3000
 
 [agent]

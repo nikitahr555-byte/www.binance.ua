@@ -11,7 +11,7 @@ deploymentTarget = "autoscale"
 run = ["python", "HTML-CSS-JS-Static/server.py"]
 
 [workflows]
-runButton = "Project"
+runButton = "Web Server"
 
 [[workflows.workflow]]
 name = "Project"
@@ -35,16 +35,8 @@ waitForPort = 5000
 outputType = "webview"
 
 [[ports]]
-localPort = 80
-externalPort = 80
-
-[[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 32799
-externalPort = 3000
 
 [agent]
 expertMode = true

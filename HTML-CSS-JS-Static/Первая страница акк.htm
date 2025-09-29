@@ -6,43 +6,36 @@
         #onetrust-consent-sdk #onetrust-banner-sdk {background-color: #FFFFFF;}
         
         /* Bar wave loading animation for numbers */
-        :root {
-            --bar-color: #c0c0c0; /* сірий колір */
-            --bar-width: 6.6px;   /* товщина */
-            --gap: 8px;
-            --speed: 0.6s;        /* швидший ритм */
-            --baseline: 50.0667px;
-            --max-height: 22px;   /* максимальна висота */
-        }
-
-        /* Лоадер */
         .number-loading {
             display: inline-flex;
+            vertical-align: text-bottom;
             align-items: flex-end;
-            gap: var(--gap);
-            height: var(--baseline);
-            vertical-align: middle;
+            height: 1em;                /* match text height */
+            color: currentColor;         /* inherit text color */
         }
 
-        .bar {
-            width: var(--bar-width);
-            background: var(--bar-color);
-            border-radius: 2px;
-            animation: wave var(--speed) cubic-bezier(0.42, 0, 0.58, 1) infinite;
-            transform-origin: center bottom;
+        .number-loading .bar {
+            width: 0.12em;              /* bar width */
+            margin-right: 0.12em;       /* spacing between bars */
+            background: currentColor;
+            border-radius: 0.06em;
+            transform-origin: bottom;
+            animation: wave 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        }
+
+        .number-loading .bar:last-child { 
+            margin-right: 0; 
         }
 
         /* різні висоти для живішого вигляду */
-        .bar.b1 { height: var(--max-height); animation-delay: 0s; }
-        .bar.b2 { height: calc(var(--max-height) - 6px); animation-delay: 0.15s; }
-        .bar.b3 { height: calc(var(--max-height) - 3px); animation-delay: 0.3s; }
-        .bar.b4 { height: calc(var(--max-height) - 9px); animation-delay: 0.45s; }
+        .number-loading .bar.b1 { height: 0.55em; animation-delay: 0s; }
+        .number-loading .bar.b2 { height: 0.80em; animation-delay: 0.12s; }
+        .number-loading .bar.b3 { height: 0.65em; animation-delay: 0.24s; }
+        .number-loading .bar.b4 { height: 0.95em; animation-delay: 0.36s; }
 
         @keyframes wave {
-            0%, 100% { transform: scaleY(1); }
-            25%      { transform: scaleY(1.6); } /* більша амплітуда */
+            0%, 100% { transform: scaleY(0.6); }
             50%      { transform: scaleY(1); }
-            75%      { transform: scaleY(0.6); } /* більша амплітуда */
         }
 
         /* Hide balance numbers immediately until JavaScript replaces them */

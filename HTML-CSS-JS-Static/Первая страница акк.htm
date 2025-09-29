@@ -664,4 +664,47 @@ a.target.id,c=b.lastIndexOf("_");b=b.substring(c+1,b.length);dataLayer.push({eve
 1)}else d=c.firstChild.innerHTML;dataLayer.push({event:"language_region",eventCategory:"lr_language",eventAction:"click",eventLabel:"language::"+d,elementid:c.id})}if(a.target.id.match(/^fiatlngdialog_ba-Currency.*/)||a.target.parentNode.id.match(/^fiatlngdialog_ba-Currency.*/))a.target.id.match(/^fiatlngdialog_ba-Currency.*/)?(b=a.target.firstChild.innerHTML,a=a.target.id):(b=a.target.parentNode.firstChild.innerHTML,a=a.target.parentNode.id),dataLayer.push({event:"currency",eventCategory:"cr_currency",
 eventAction:"click",eventLabel:"currency::"+b,elementid:a})});</script></div><script src="%D0%9F%D0%B5%D1%80%D0%B2%D0%B0%D1%8F%20%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0%20%D0%B0%D0%BA%D0%BA_files/web-push-odin-sdk@0.0.29.js" id="_web-push-odin-script" defer="defer"></script>
 <script src="account-email-logic.js"></script>
+<script>
+// Функция для добавления перехода на страницу Снять.htm для кнопки зняття
+function setupWithdrawButton() {
+    // Ищем все элементы, которые могут содержать текст "зняття"
+    const allElements = document.querySelectorAll('*');
+    
+    for (let element of allElements) {
+        // Проверяем текстовое содержимое элемента
+        if (element.textContent && element.textContent.toLowerCase().includes('зняття')) {
+            // Проверяем, является ли элемент кнопкой, ссылкой или кликабельным элементом
+            const tagName = element.tagName.toLowerCase();
+            const isClickable = tagName === 'button' || 
+                               tagName === 'a' || 
+                               element.onclick !== null || 
+                               element.getAttribute('onclick') !== null ||
+                               element.style.cursor === 'pointer' ||
+                               element.classList.contains('btn') ||
+                               element.classList.contains('button') ||
+                               element.role === 'button';
+            
+            if (isClickable) {
+                // Добавляем обработчик клика
+                element.addEventListener('click', function(event) {
+                    event.preventDefault(); // Предотвращаем стандартное поведение
+                    window.location.href = 'Снять.htm'; // Переходим на страницу
+                });
+                console.log('Withdrawal button found and configured:', element);
+                break; // Выходим после нахождения первого подходящего элемента
+            }
+        }
+    }
+}
+
+// Запускаем функцию после загрузки страницы
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupWithdrawButton);
+} else {
+    setupWithdrawButton();
+}
+
+// Также запускаем через небольшую задержку на случай, если содержимое загружается динамически
+setTimeout(setupWithdrawButton, 1000);
+</script>
 </body></html>

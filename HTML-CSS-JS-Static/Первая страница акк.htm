@@ -10,15 +10,16 @@
             display: inline-flex;
             vertical-align: text-bottom;
             align-items: flex-end;
-            height: 1em;                /* match text height */
+            height: 0.7em;              /* reduced height */
             color: currentColor;         /* inherit text color */
+            margin: 0 0.3em;            /* increased spacing from currency */
         }
 
         .number-loading .bar {
-            width: 0.12em;              /* bar width */
-            margin-right: 0.12em;       /* spacing between bars */
+            width: 0.10em;              /* slightly smaller bar width */
+            margin-right: 0.08em;       /* spacing between bars */
             background: currentColor;
-            border-radius: 0.06em;
+            border-radius: 0.05em;
             transform-origin: bottom;
             animation: wave 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
         }
@@ -27,11 +28,11 @@
             margin-right: 0; 
         }
 
-        /* різні висоти для живішого вигляду */
-        .number-loading .bar.b1 { height: 0.55em; animation-delay: 0s; }
-        .number-loading .bar.b2 { height: 0.80em; animation-delay: 0.12s; }
-        .number-loading .bar.b3 { height: 0.65em; animation-delay: 0.24s; }
-        .number-loading .bar.b4 { height: 0.95em; animation-delay: 0.36s; }
+        /* зменшені висоти для живішого вигляду (горизонтально відзеркалені) */
+        .number-loading .bar.b1 { height: 0.35em; animation-delay: 0.36s; } /* was b4 */
+        .number-loading .bar.b2 { height: 0.45em; animation-delay: 0.24s; } /* was b3 */
+        .number-loading .bar.b3 { height: 0.40em; animation-delay: 0.12s; } /* was b2 */
+        .number-loading .bar.b4 { height: 0.55em; animation-delay: 0s; } /* was b1 */
 
         @keyframes wave {
             0%, 100% { transform: scaleY(0.6); }
